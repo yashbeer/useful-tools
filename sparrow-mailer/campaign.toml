@@ -1,0 +1,59 @@
+# Authored copy. Reloaded every tick - edit while the daemon runs.
+id         = "319470da-b10f-4eed-951d-9e477d564ab5"  # stable key for enrollments - do not change
+name       = "cold-email-ai-automation-pharma"       # free-text label, rename freely
+from_addr  = "Swati <swati@makeflow.in>"
+reply_to   = "swati@makeflow.in"
+
+# Transport (host/port/user/password) lives in the env file, not here -
+# this file is copy and schedule, and it goes in git.
+imap_every = 5                       # poll for replies every N ticks
+imap_lookback_days = 2
+
+max_per_day    = 200                 # GoDaddy caps at 250 relays/day
+sends_per_tick = 1                   # 1 per 60s tick = naturally paced
+require_merge_fields = true          # never send "Hi ," - skip and flag instead
+
+api_host = "127.0.0.1"
+api_port = 3005
+
+[window]
+days  = ["Mon", "Tue", "Wed", "Thu", "Fri"]
+start = "09:30"
+end   = "23:59"
+tz    = "Asia/Kolkata"
+
+[[steps]]
+after_days = 0
+subject = "Quick question about Makeflow"
+body = """
+Hi {{firstname}},
+
+Hey, do you guys are open on Weekends?
+
+Best,
+Swati
+"""
+
+[[steps]]
+after_days = 3
+subject = ""                         # blank => "Re: <step 1>", threaded
+body = """
+Hi {{firstname}},
+
+<nudge>
+
+Best,
+Swati
+"""
+
+[[steps]]
+after_days = 5
+subject = ""
+body = """
+Hi {{firstname}},
+
+<last touch, then the sequence ends>
+
+Best,
+Swati
+"""

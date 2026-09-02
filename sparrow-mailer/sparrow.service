@@ -1,0 +1,16 @@
+# install: cp sparrow.service ~/.config/systemd/user/
+#          systemctl --user enable --now sparrow
+#          loginctl enable-linger $USER
+[Unit]
+Description=sparrow mailer
+After=network-online.target
+
+[Service]
+WorkingDirectory=%h/workspace/repos/useful-tools/sparrow-mailer
+ExecStart=/usr/bin/python3 server.py run --loop --api
+EnvironmentFile=%h/.config/sparrow.env
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

@@ -1,6 +1,0 @@
-sparrow.db
-sparrow.db-wal
-sparrow.db-shm
-.env
-backups/
-__pycache__/
